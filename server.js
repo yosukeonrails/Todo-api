@@ -1,30 +1,20 @@
 
 var express = require('express') ;
+
+var bodyParser = require('body-parser');
+// this is middleware...i dont get it
+
+
 var app= express();
 var PORT= process.env.PORT || 3000 ; 
 
-var todos= [ {
-	id: 1, 
-	description: ' Meet Mom for Lunch ',
-	completed: false //a boolean
+var todos= [ ];
 
-}, 
-{
+var todoNextID = 1 
 
-	id: 2, 
-	description: ' Go to market ',
-	completed: false 
 
-},
+app.use(bodyParser.json());
 
-{
-
-	id: 3, 
-	description: ' Kill Zombies for fun AND MOBS ',
-	completed: true
-
-}
-];
 
 //Model = The Todo object
 // Collection =  collection of the Todo objects
@@ -71,7 +61,21 @@ app.get('/todos/:id', function (req,res) {
 
 })
 
+ 
+ // POST/todos request , new http method it can take data,
+app.post('/todos' , function (req,res){
 
+	
+	var body = req.body;
+
+         body.id= todoNextID++ ;
+
+		todos.push(body);
+
+
+	res.json(body)
+
+})
 
 
 app.listen(PORT , function () {

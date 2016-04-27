@@ -39,11 +39,36 @@ app.get('/' ,  function (req, res) {
 // GET /todos    > to get all of the todo Items 
 
 
+
 app.get('/todos', function (req,res) {
-	res.json(todos); // to convert to JSON
+
+  var queryParams= req.query;
+    
+    var filteredTodos= todos;
+
+
+
+     if( queryParams.hasOwnProperty('completed') &&  queryParams.completed === 'true') {
+      filteredTodos = _.where(filteredTodos, {completed:true});
+     } else if (
+      queryParams.hasOwnProperty('completed') && queryParams.completed === 'false') {  
+        filteredTodos = _.where ( filteredTodos , {completed:false} )
+         }
+
+
+   // if has property && complete=true 
+   // filteredTodos = _.where(filteredTodos,?)
+   // ele if hs prop && completed if 'false'
+
+
+
+	res.json(filteredTodos); 
+  
+
+  // to convert to JSON
 	// we can use POSTman to test if the get request 
 	//is working.
-} )
+} );
 
 
 //GET /todos/:id > to get individual 
@@ -158,7 +183,7 @@ app.post('/todos' , function (req,res){
    	if (body.hasOwnProperty('description') && _.isString(body.description) &&
    		body.description.trim().length > 0 ) {
    		validAttributes.description = body.description
-   	} else if (body.hasOwnProperty('description')) {
+   	} else if ( body.hasOwnProperty('description')) {
    		return res.status(400).send(); 	
    	} 
 

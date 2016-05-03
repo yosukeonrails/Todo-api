@@ -40,24 +40,46 @@ app.get('/', function(req, res) {
 
 
 
-app.get('/todos', function(req, res) {
+app.get('/todos', function (req, res) {
 
-  var queryParams = req.query;
+  //var queryParams = req.query;
 
-  var filteredTodos = todos;
+  var query= req.query;
+ // var filteredTodos = todos;
+    var where= {} 
 
+      if (query.hasOwnProperty('completed') && query.completed === 'true' ) {
+        where.completed = true
+      } else if (
+        query.hasOwnProperty('completed') && query.completed === 'false'
+      ) {
+        where.completed = false
+      }
 
+      db.todo.findAll({
 
-  if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true') {
-    filteredTodos = _.where(filteredTodos, {
-      completed: true
-    });
-  } else if (
-    queryParams.hasOwnProperty('completed') && queryParams.completed === 'false') {
-    filteredTodos = _.where(filteredTodos, {
-      completed: false
-    })
-  }
+        where: where
+
+      }).then( function (todos){
+
+      res.json(todos);
+       } , function (e) {
+        res.status(500).send();
+
+      })
+
+ })
+
+  // if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true') {
+  //   filteredTodos = _.where(filteredTodos, {
+  //     completed: true
+  //   });
+  // } else if (
+  //   queryParams.hasOwnProperty('completed') && queryParams.completed === 'false') {
+  //   filteredTodos = _.where(filteredTodos, {
+  //     completed: false
+  //   })
+  // }
 
 
 
@@ -65,25 +87,25 @@ app.get('/todos', function(req, res) {
   // filteredTodos = _.where(filteredTodos,?)
   // ele if hs prop && completed if 'false'
 
-  if (queryParams.hasOwnProperty('q') && queryParams.q.length > 0) {
+//   if (queryParams.hasOwnProperty('q') && queryParams.q.length > 0) {
 
-    filteredTodos = _.filter(filteredTodos, function(todo) {
-      return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
+//     filteredTodos = _.filter(filteredTodos, function(todo) {
+//       return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
 
-    });
+//     });
 
-  }
+//   }
 
-  // 'Go to work on Saturday'.indexOf('work') 
-
-
-  res.json(filteredTodos);
+//         // 'Go to work on Saturday'.indexOf('work') 
 
 
-  // to convert to JSON
-  // we can use POSTman to test if the get request 
-  //is working.
-});
+//   res.json(filteredTodos);
+
+
+//      // to convert to JSON
+//       // we can use POSTman to test if the get request 
+//         //is working.
+// });
 
 
 //GET /todos/:id > to get individual 

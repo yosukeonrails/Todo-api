@@ -70,45 +70,7 @@ app.get('/todos', function (req, res) {
 
  })
 
-  // if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true') {
-  //   filteredTodos = _.where(filteredTodos, {
-  //     completed: true
-  //   });
-  // } else if (
-  //   queryParams.hasOwnProperty('completed') && queryParams.completed === 'false') {
-  //   filteredTodos = _.where(filteredTodos, {
-  //     completed: false
-  //   })
-  // }
 
-
-
-  // if has property && complete=true 
-  // filteredTodos = _.where(filteredTodos,?)
-  // ele if hs prop && completed if 'false'
-
-//   if (queryParams.hasOwnProperty('q') && queryParams.q.length > 0) {
-
-//     filteredTodos = _.filter(filteredTodos, function(todo) {
-//       return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
-
-//     });
-
-//   }
-
-//         // 'Go to work on Saturday'.indexOf('work') 
-
-
-//   res.json(filteredTodos);
-
-
-//      // to convert to JSON
-//       // we can use POSTman to test if the get request 
-//         //is working.
-// });
-
-
-//GET /todos/:id > to get individual 
 
 app.get('/todos/:id', function(req, res) {
 

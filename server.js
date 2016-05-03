@@ -95,13 +95,27 @@ app.get('/todos/:id', function(req, res) {
   //the code underneath work, because todoID needs to be a number 
   //within the array?? 
 
-  var matchedTodo = _.findWhere(todos, {
-    id: todoId
-  });
+    db.todo.findById(todoId).then(function (todo) {
+      if(!!todo) {
+res.json(todo.toJSON())
+      } else {
+        res.status(404).send();
+      }
+    }, function (e) { 
+    
+    res.status(500).send();
+
+
+    })
+
+   
+  // var matchedTodo = _.findWhere(todos, {
+  //   id: todoId
+  // });
   //findwhere will take 2 argumets , the array and what youre looking for
   //the code above is using underscore for the search
 
-
+     
   //var matchedTodo;
   // todos.forEach( function (todo){
   // 	  if(todoId === todo.id ){
@@ -110,20 +124,28 @@ app.get('/todos/:id', function(req, res) {
   // 	});    
   //  the commented above is only by using normal js code
 
+    
 
 
-  if (matchedTodo) {
-    res.json(matchedTodo);
 
-  } else {
 
-    res.status(404).send();
-    //res.json('cannot find ' + req.params.id);
 
-  }
+//   if (matchedTodo) {
+//     res.json(matchedTodo);
+
+//   } else {
+
+//     res.status(404).send();
+//     //res.json('cannot find ' + req.params.id);
+
+//   }
 
 
 })
+
+
+
+
 
 
 
@@ -141,7 +163,7 @@ app.post('/todos', function(req, res) {
   var body = _.pick(req.body, 'description', 'completed');
 
     // post to database project :
-    
+
     db.todo.create(body).then(function (todo) { 
 
       res.json(todo.toJSON())

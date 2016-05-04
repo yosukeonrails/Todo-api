@@ -186,25 +186,55 @@ app.post('/todos', function(req, res) {
 
 // delete / todos / :id  url and callback
 
+
+
+
+
 app.delete('/todos/:id', function(req, res) {
 
-  var todoId = parseInt(req.params.id, 10);
 
-  var matchedTodo = _.findWhere(todos, {
-    id: todoId
-  });
+ var todoId = parseInt(req.params.id, 10);
 
 
-  if (!matchedTodo) {
-    res.status(404).send()
-  } else {
+   db.todo.destroy({
+    where: {
+      id:todoId
+    }
+   }).then( function (rowsDeleted){
 
-    todos = _.without(todos, matchedTodo)
-    res.json(matchedTodo);
-  }
+    if(rowsDeleted === 0 ){
+      res.status(404).json({
+        error: 'No todo with id'
+      });
+    } else {
+      res.status(204).send();
+    }
+     
+   }, function(){
+    res.status(500).send();
+   })
+  // var matchedTodo = _.findWhere(todos, {
+  //   id: todoId
+  // });
+
+
+  // if (!matchedTodo) {
+  //   res.status(404).send()
+  // } else {
+
+  //   todos = _.without(todos, matchedTodo)
+  //   res.json(matchedTodo);
+  // }
 
 
 })
+
+
+
+
+
+
+
 
 //PUT / todos/:id 
 app.put('/todos/:id', function(req, res) {

@@ -42,6 +42,13 @@
 
     //app todos/id 
 
+       app.get('/todos/:id', function (req,res){
+
+        
+
+
+       })
+
     // post todos with body
 
     // delete 

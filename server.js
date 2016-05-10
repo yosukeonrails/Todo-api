@@ -15,7 +15,7 @@ var todos = [];
 
 var todoNextID = 1
 
-
+var bcrypt = require('bcrypt')
 
 app.use(bodyParser.json());
 // have no idea... what is this thing even doing?
@@ -26,7 +26,7 @@ app.use(bodyParser.json());
 // Collection =  collection of the Todo objects
 
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
   res.send('Todo API Root');
 
 });
@@ -56,9 +56,20 @@ app.get('/todos', function (req, res) {
         where.completed = false
       }
 
+
+
+         if(query.hasOwnProperty('q') && query.q.length > 0 ){
+        where.description = {
+          $like: '%' + query.q + '%'
+        };
+      }
+
+
+
+
       db.todo.findAll({
 
-        where: where
+        where:where
 
       }).then( function (todos){
 
@@ -72,7 +83,7 @@ app.get('/todos', function (req, res) {
 
 
 
-app.get('/todos/:id', function(req, res) {
+app.get('/todos/:id', function (req, res) {
 
 
   var todoId = parseInt(req.params.id, 10); // this will make 
@@ -190,7 +201,7 @@ app.post('/todos', function(req, res) {
 
 
 
-app.delete('/todos/:id', function(req, res) {
+app.delete('/todos/:id', function (req, res) {
 
 
  var todoId = parseInt(req.params.id, 10);
@@ -295,7 +306,23 @@ app.post('/users', function (req, res) {
 
   //copies one object to another
 
-  db.sequelize.sync().then(function(){
+  // POST / users / login
+    
+  app.post('/users/login' , function (req, res) {
+
+    var body = _.pick(req.body, 'email', 'password');
+     
+     db.user.authenticate(body).then(function (user){
+       res.json(user.toPublicJSON());
+     }, function (){
+        res.status(401).send();
+     });
+
+ });
+
+
+
+  db.sequelize.sync({ force:true }).then(function () {
 
     app.listen(PORT, function() {
     console.log('Express listening on ' + PORT + ' ! ');

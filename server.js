@@ -17,6 +17,8 @@ var todoNextID = 1
 
 var bcrypt = require('bcrypt')
 
+var middleware= require('./middleware.js')(db);
+
 app.use(bodyParser.json());
 // have no idea... what is this thing even doing?
 
@@ -40,7 +42,7 @@ app.get('/', function (req, res) {
 
 
 
-app.get('/todos', function (req, res) {
+app.get('/todos', middleware.requireAuthentication ,  function (req, res) {
 
   //var queryParams = req.query;
 
@@ -83,7 +85,7 @@ app.get('/todos', function (req, res) {
 
 
 
-app.get('/todos/:id', function (req, res) {
+app.get('/todos/:id',middleware.requireAuthentication , function (req, res) {
 
 
   var todoId = parseInt(req.params.id, 10); // this will make 
@@ -151,7 +153,7 @@ res.json(todo.toJSON())
 // POST/todos request , new http method it can take data,
 
 
-app.post('/todos', function(req, res) {
+app.post('/todos',middleware.requireAuthentication , function(req, res) {
 
 
 
@@ -201,7 +203,7 @@ app.post('/todos', function(req, res) {
 
 
 
-app.delete('/todos/:id', function (req, res) {
+app.delete('/todos/:id',middleware.requireAuthentication , function (req, res) {
 
 
  var todoId = parseInt(req.params.id, 10);
@@ -248,7 +250,7 @@ app.delete('/todos/:id', function (req, res) {
 
 
 //PUT / todos/:id 
-app.put('/todos/:id', function (req, res) {
+app.put('/todos/:id',middleware.requireAuthentication , function (req, res) {
 
   var todoId = parseInt(req.params.id, 10);
   var body = _.pick(req.body, 'description', 'completed')

@@ -1,6 +1,8 @@
 var bcrypt = require('bcrypt');
 	var _ = require ('underscore');
 
+	/// NOW IT HAS A COMMENT 
+
 		module.exports = function (sequelize , DataTypes) {
 			var user= sequelize.define('user', {
 			email: {

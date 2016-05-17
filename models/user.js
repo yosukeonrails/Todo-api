@@ -6,7 +6,13 @@ var bcrypt = require('bcrypt');
 	/// NOW IT HAS A COMMENT 
 
 		module.exports = function (sequelize , DataTypes) {
-			var user= sequelize.define('user', {
+
+
+
+			var user = sequelize.define('user', {
+
+
+
 			email: {
 				type: DataTypes.STRING,
 				allowNull: false,
@@ -35,9 +41,13 @@ var bcrypt = require('bcrypt');
 						this.setDataValue('salt' , salt);
 						this.setDataValue ('password_hash' , hashedPassword);
 					}
-				}
+				} // end of email object
+		},  
 
-			},  {
+
+			{   /// beggining of instances ------------------
+
+
 			 hooks: {
 	     	beforeValidate: function (user , options) {
 
@@ -46,7 +56,12 @@ var bcrypt = require('bcrypt');
                   	  	}
 				     }
 				 },
+
+
+
+
 				 classMethods: {
+
 				 	authenticate: function (body) {
 				 		return new Promise(function(resolve, reject){
 				 	  if( typeof body.email !== 'string' || typeof body.password !== 'string') {
@@ -68,12 +83,11 @@ var bcrypt = require('bcrypt');
 				   }, function (e) {
 				          reject();
 
-				 
  				      });
 
 				 		});
+				 	       },
 
-				 	},
 				 	findByToken: function (token) {  
 				 		 return new Promise(function (resolve, reject) {
 				 		 	try {
@@ -101,22 +115,36 @@ var bcrypt = require('bcrypt');
 				 	}
 
 				 },
+
+
+
+
 				 instanceMethods: {
+
 				 	toPublicJSON: function () {
 				 		var json = this.toJSON();
 				 		return _.pick(json, 'id' , 'email' , 'createdAt' , 'updatedAt');
 				 	},
+
 				 	generateToken: function (type) {
 				 		if (!_.isString(type)){
 				 			return undefined;
 				 		}
 				 		try {
+
        				var stringData= JSON.stringify( {id: this.get('id'), type: type})
+       				  // the type here is 'authentification' as seen in server.js
+       				  // what is 'this'? 
+
                       var encryptedData = cryptojs.AES.encrypt(stringData, 'abc12345').toString();
+                           // fisrt argument is what to encrypt
+                           // second, the password needed to encrypt and decrypt data
                          
                          var token= jwt.sign({
+
                          	token: encryptedData
-                         }, 'qwerty098')
+                         }, 
+                            'qwerty098')
 
                          return token;
 
@@ -124,7 +152,14 @@ var bcrypt = require('bcrypt');
 				 			return undefined;
 				 		}
 				 	}
-				 }
+
+
+
+
+
+
+				 }// end of new argument in seq. define----------
+
 
 		});
 

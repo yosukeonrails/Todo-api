@@ -48,7 +48,7 @@ app.get('/todos', middleware.requireAuthentication ,  function (req, res) {
 
   var query= req.query;
  // var filteredTodos = todos;
-    var where= {} 
+    var where= { userId: req.user.get('id')} // req.user.get('id')
 
       if (query.hasOwnProperty('completed') && query.completed === 'true' ) {
         where.completed = true
@@ -92,7 +92,15 @@ app.get('/todos/:id',middleware.requireAuthentication , function (req, res) {
   //the code underneath work, because todoID needs to be a number 
   //within the array?? 
 
-    db.todo.findById(todoId).then(function (todo) {
+    db.todo.findOne({
+      where: {
+
+       id:todoId,
+
+       userId: req.user.get('id')
+
+      }
+    }).then(function (todo) {
       if(!!todo) {
 res.json(todo.toJSON())
       } else {
@@ -165,9 +173,13 @@ app.post('/todos',middleware.requireAuthentication , function(req, res) {
 
       // res.json(todo.toJSON())
       req.user.addTodo(todo).then(function(){
+
        return todo.reload();
+
       }).then(function (todo){
+
          res.json(todo.toJSON())
+
       });
 
      
@@ -218,7 +230,10 @@ app.delete('/todos/:id', middleware.requireAuthentication , function (req, res) 
 
    db.todo.destroy({
     where: {
-      id:todoId
+
+      id:todoId,
+
+      userId: req.user.get('id')
     }
    }).then( function (rowsDeleted){
 
@@ -271,7 +286,13 @@ app.put('/todos/:id',middleware.requireAuthentication , function (req, res) {
     attributes.description = body.description;
   } 
 
- db.todo.findById(todoId).then(function (todo){
+ db.todo.findOne({
+  where: {
+    id:todoId,
+    userId: req.user.get('id')
+
+  }
+ }).then(function (todo){
 
  if (todo){
 
